@@ -36,7 +36,7 @@ AM_CPPFLAGS = -DAMDGPU_ASIC_ID_TABLE=\"${libdrmdatadir}/amdgpu.ids\"
 libdrm_amdgpu_la_LTLIBRARIES = libdrm_amdgpu.la
 libdrm_amdgpu_ladir = $(libdir)
 libdrm_amdgpu_la_LDFLAGS = -version-number 1:0:0 -no-undefined
-libdrm_amdgpu_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@
+libdrm_amdgpu_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@ @ATOMIC_OPS_LIBS@
 
 libdrm_amdgpu_la_SOURCES = $(LIBDRM_AMDGPU_FILES)
 amdgpu_asic_id.lo: $(top_srcdir)/data/amdgpu.ids

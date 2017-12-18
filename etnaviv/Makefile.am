@@ -12,7 +12,8 @@ libdrm_etnaviv_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 libdrm_etnaviv_la_LIBADD = \
 	../libdrm.la \
 	@PTHREADSTUBS_LIBS@ \
-	@CLOCK_LIB@
+	@CLOCK_LIB@ \
+	@ATOMIC_OPS_LIBS@
 
 libdrm_etnaviv_la_SOURCES = $(LIBDRM_ETNAVIV_FILES)
 

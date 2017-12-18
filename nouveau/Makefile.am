@@ -10,7 +10,7 @@ AM_CFLAGS = \
 libdrm_nouveau_la_LTLIBRARIES = libdrm_nouveau.la
 libdrm_nouveau_ladir = $(libdir)
 libdrm_nouveau_la_LDFLAGS = -version-number 2:0:0 -no-undefined
-libdrm_nouveau_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@
+libdrm_nouveau_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@ @ATOMIC_OPS_LIBS@
 
 libdrm_nouveau_la_SOURCES = $(LIBDRM_NOUVEAU_FILES)
 

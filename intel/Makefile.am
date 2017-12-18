@@ -38,7 +38,8 @@ libdrm_intel_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 libdrm_intel_la_LIBADD = ../libdrm.la \
 	@PTHREADSTUBS_LIBS@ \
 	@PCIACCESS_LIBS@ \
-	@CLOCK_LIB@
+	@CLOCK_LIB@ \
+	@ATOMIC_OPS_LIBS@
 
 libdrm_intel_la_SOURCES = $(LIBDRM_INTEL_FILES)
 

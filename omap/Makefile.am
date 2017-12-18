@@ -7,7 +7,7 @@ AM_CFLAGS = \
 libdrm_omap_la_LTLIBRARIES = libdrm_omap.la
 libdrm_omap_ladir = $(libdir)
 libdrm_omap_la_LDFLAGS = -version-number 1:0:0 -no-undefined
-libdrm_omap_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@
+libdrm_omap_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@ @ATOMIC_OPS_LIBS@
 
 libdrm_omap_la_SOURCES = omap_drm.c
 

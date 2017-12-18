@@ -9,7 +9,7 @@ AM_CFLAGS = \
 libdrm_tegra_ladir = $(libdir)
 libdrm_tegra_la_LTLIBRARIES = libdrm_tegra.la
 libdrm_tegra_la_LDFLAGS = -version-number 0:0:0 -no-undefined
-libdrm_tegra_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@
+libdrm_tegra_la_LIBADD = ../libdrm.la @PTHREADSTUBS_LIBS@ @ATOMIC_OPS_LIBS@
 
 libdrm_tegra_la_SOURCES = \
 	private.h \

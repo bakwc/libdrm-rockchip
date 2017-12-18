@@ -247,7 +247,7 @@ AC_CACHE_CHECK([for native atomic primitives], drm_cv_atomic_primitives, [
 					  ]],[[]])], [drm_cv_atomic_primitives="Intel"],[])
 
 	if test "x$drm_cv_atomic_primitives" = "xnone"; then
-		AC_CHECK_HEADER([atomic_ops.h], drm_cv_atomic_primitives="libatomic-ops")
+		PKG_CHECK_MODULES(ATOMIC_OPS, [atomic_ops], drm_cv_atomic_primitives="libatomic-ops", true)
 	fi
 
 	# atomic functions defined in <atomic.h> & libc on Solaris

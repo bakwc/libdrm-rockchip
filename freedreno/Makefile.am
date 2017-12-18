@@ -14,7 +14,8 @@ libdrm_freedreno_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 libdrm_freedreno_la_LIBADD = \
 	../libdrm.la \
 	@PTHREADSTUBS_LIBS@ \
-	@CLOCK_LIB@
+	@CLOCK_LIB@ \
+	@ATOMIC_OPS_LIBS@
 
 libdrm_freedreno_la_SOURCES = $(LIBDRM_FREEDRENO_FILES)
 if HAVE_FREEDRENO_KGSL
