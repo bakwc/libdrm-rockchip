@@ -50,6 +50,7 @@
 #include <strings.h>
 #include <errno.h>
 #include <poll.h>
+#include <fcntl.h>
 #include <sys/time.h>
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
@@ -66,6 +67,10 @@
 
 #include "buffers.h"
 #include "cursor.h"
+
+int encoders = 0, connectors = 0, crtcs = 0, planes = 0, fbs = 0;
+int dump_only;
+#define need_resource(type) (!dump_only || type##s)
 
 struct crtc {
 	drmModeCrtc *crtc;
@@ -491,7 +496,7 @@ static void dump_crtcs(struct device *dev)
 	printf("\n");
 }
 
-static void dump_framebuffers(struct device *dev)
+static void dump_fbs(struct device *dev)
 {
 	drmModeFB *fb;
 	int i;
@@ -563,6 +568,7 @@ static void free_resources(struct resources *res)
 		return;
 
 #define free_resource(_res, __res, type, Type)					\
+	if (need_resource(type))						\
 	do {									\
 		if (!(_res)->type##s)						\
 			break;							\
@@ -575,6 +581,7 @@ static void free_resources(struct resources *res)
 	} while (0)
 
 #define free_properties(_res, __res, type)					\
+	if (need_resource(type))						\
 	do {									\
 		for (i = 0; i < (int)(_res)->__res->count_##type##s; ++i) {	\
 			drmModeFreeObjectProperties(res->type##s[i].props);	\
@@ -588,6 +595,7 @@ static void free_resources(struct resources *res)
 		free_resource(res, res, crtc, Crtc);
 		free_resource(res, res, encoder, Encoder);
 
+		if (need_resource(connector))
 		for (i = 0; i < res->res->count_connectors; i++)
 			free(res->connectors[i].name);
 
@@ -635,6 +643,7 @@ static struct resources *get_resources(struct device *dev)
 		goto error;
 
 #define get_resource(_res, __res, type, Type)					\
+	if (need_resource(type))						\
 	do {									\
 		for (i = 0; i < (int)(_res)->__res->count_##type##s; ++i) {	\
 			(_res)->type##s[i].type =				\
@@ -652,6 +661,7 @@ static struct resources *get_resources(struct device *dev)
 	get_resource(res, res, fb, FB);
 
 	/* Set the name of all connectors based on the type name and the per-type ID. */
+	if (need_resource(connector))
 	for (i = 0; i < res->res->count_connectors; i++) {
 		struct connector *connector = &res->connectors[i];
 		drmModeConnector *conn = connector->connector;
@@ -665,6 +675,7 @@ static struct resources *get_resources(struct device *dev)
 	}
 
 #define get_properties(_res, __res, type, Type)					\
+	if (need_resource(type))						\
 	do {									\
 		for (i = 0; i < (int)(_res)->__res->count_##type##s; ++i) {	\
 			struct type *obj = &res->type##s[i];			\
@@ -692,6 +703,7 @@ static struct resources *get_resources(struct device *dev)
 	get_properties(res, res, crtc, CRTC);
 	get_properties(res, res, connector, CONNECTOR);
 
+	if (need_resource(crtc))
 	for (i = 0; i < res->res->count_crtcs; ++i)
 		res->crtcs[i].mode = &res->crtcs[i].crtc->mode;
 
@@ -1825,7 +1837,6 @@ int main(int argc, char **argv)
 	struct device dev;
 
 	int c;
-	int encoders = 0, connectors = 0, crtcs = 0, planes = 0, framebuffers = 0;
 	int drop_master = 0;
 	int test_vsync = 0;
 	int test_cursor = 0;
@@ -1865,7 +1876,7 @@ int main(int argc, char **argv)
 			encoders = 1;
 			break;
 		case 'f':
-			framebuffers = 1;
+			fbs = 1;
 			break;
 		case 'M':
 			module = optarg;
@@ -1931,9 +1942,14 @@ int main(int argc, char **argv)
 	}
 
 	if (!args || (args == 1 && use_atomic))
-		encoders = connectors = crtcs = planes = framebuffers = 1;
+		encoders = connectors = crtcs = planes = fbs = 1;
 
-	dev.fd = util_open(device, module);
+	dump_only = !count && !plane_count && !prop_count;
+
+	if (dump_only && !device)
+		dev.fd = open("/dev/dri/card0", O_RDWR);
+	else
+		dev.fd = util_open(device, module);
 	if (dev.fd < 0)
 		return -1;
 
@@ -1981,7 +1997,7 @@ int main(int argc, char **argv)
 	dump_resource(&dev, connectors);
 	dump_resource(&dev, crtcs);
 	dump_resource(&dev, planes);
-	dump_resource(&dev, framebuffers);
+	dump_resource(&dev, fbs);
 
 	for (i = 0; i < prop_count; ++i)
 		set_property(&dev, &prop_args[i]);
