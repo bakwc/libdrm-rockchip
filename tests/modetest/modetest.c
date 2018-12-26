@@ -73,7 +73,7 @@
 #include "cursor.h"
 
 int encoders = 0, connectors = 0, crtcs = 0, planes = 0, fbs = 0;
-int dump_only;
+int atomic = 0, dump_only;
 #define need_resource(type) (!dump_only || type##s)
 
 struct crtc {
@@ -626,7 +626,10 @@ static struct resources *get_resources(struct device *dev)
 	if (res == 0)
 		return NULL;
 
-	drmSetClientCap(dev->fd, DRM_CLIENT_CAP_UNIVERSAL_PLANES, 1);
+	if (atomic)
+		drmSetClientCap(dev->fd, DRM_CLIENT_CAP_ATOMIC, 1);
+	else
+		drmSetClientCap(dev->fd, DRM_CLIENT_CAP_UNIVERSAL_PLANES, 1);
 
 	res->res = drmModeGetResources(dev->fd);
 	if (!res->res) {
@@ -1561,6 +1564,7 @@ static void usage(char *name)
 	fprintf(stderr, "\t-w <obj_id>:<prop_name>:<value>\tset property\n");
 
 	fprintf(stderr, "\n Generic options:\n\n");
+	fprintf(stderr, "\t-a\tenable cap atomic\n");
 	fprintf(stderr, "\t-d\tdrop master after mode set\n");
 	fprintf(stderr, "\t-M module\tuse the given driver\n");
 	fprintf(stderr, "\t-D device\tuse the given device\n");
@@ -1622,7 +1626,7 @@ static int pipe_resolve_connectors(struct device *dev, struct pipe_arg *pipe)
 	return 0;
 }
 
-static char optstr[] = "cdD:efM:P:ps:Cvw:";
+static char optstr[] = "acdD:efM:P:ps:Cvw:";
 
 int main(int argc, char **argv)
 {
@@ -1650,6 +1654,10 @@ int main(int argc, char **argv)
 		args++;
 
 		switch (c) {
+		case 'a':
+			atomic = 1;
+			args--;
+			break;
 		case 'c':
 			connectors = 1;
 			break;
