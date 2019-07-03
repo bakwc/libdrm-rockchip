@@ -235,6 +235,7 @@ extern "C" {
 #define DRM_FORMAT_MOD_VENDOR_VIVANTE 0x06
 #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
 #define DRM_FORMAT_MOD_VENDOR_ARM     0x08
+#define DRM_FORMAT_MOD_VENDOR_ROCKCHIP 0x09
 /* add more to the end as needed */
 
 #define DRM_FORMAT_RESERVED	      ((1ULL << 56) - 1)
@@ -355,6 +356,7 @@ extern "C" {
  *
  */
 #define DRM_FORMAT_MOD_ARM_AFBC        fourcc_mod_code(ARM, 1)
+#define DRM_FORMAT_MOD_ROCKCHIP_10BITS fourcc_mode_code(ROCKCHIP,1)
 
 /*
  * Qualcomm Compressed Format
