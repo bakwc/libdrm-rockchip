@@ -1,8 +1,8 @@
-libdrm (2.4.74-2) unstable; urgency=medium
+libdrm (2.4.89-1) unstable; urgency=medium
 
-  * Add rockchip drm support
+  * Update new version
 
- -- yuyz <yuyz@rock-chips.com>  Fri, 20 Jan 2017 16:01:04 +0100
+ -- Caesar Wang <wxt@rock-chips.com>  Wed, 14 Aug 2019 10:28:04 +0100
 
 libdrm (2.4.74-1) unstable; urgency=medium
 
