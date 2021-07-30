@@ -14,20 +14,26 @@ with an older kernel.
 
 Compiling
 ---------
-
 libdrm  is  a  standard  autotools  package and  follows  the  normal
-configure, build  and install steps.   The first step is  to configure
-the package, which is done by running the configure shell script:
+configure, build  and install steps. At first you should install 
+dependencies. For debian based systems:
+
+	sudo apt-get install xutils-dev libtool libpciaccess-dev pkgconf
+	
+If you are building libdrm from a  git checkout, you first need to run:
+
+         ./ autogen.sh
+
+You can  pass any options to autogen.sh  that you would other wise  pass 
+to configure,  or you  can just  re-run configure  with the options you 
+need once autogen.sh finishes.  Next  step  is to configure the package, 
+which is done by running the configure shell script:
 
 	./configure
 
 By default, libdrm  will install into the /usr/local/  prefix.  If you
 want  to  install   this  DRM  to  replace  your   system  copy,  pass
---prefix=/usr and  --exec-prefix=/ to configure.  If  you are building
-libdrm  from a  git checkout,  you first  need to  run  the autogen.sh
-script.  You can  pass any options to autogen.sh  that you would other
-wise  pass to configure,  or you  can just  re-run configure  with the
-options you need once autogen.sh finishes.
+--prefix=/usr and  --exec-prefix=/ to configure. 
 
 Next step is to build libdrm:
 
